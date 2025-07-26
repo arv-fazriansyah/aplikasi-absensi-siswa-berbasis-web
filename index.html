@@ -1,118 +1,137 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Absensi Siswa</title>
   <style>
-    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 1rem; }
+    body { font-family: sans-serif; padding: 1rem; }
+    nav { background: #0d6efd; color: white; padding: 1rem; margin-bottom: 1rem; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
-    select, input { padding: 0.25rem; }
-    button { padding: 0.5rem 1rem; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; }
+    select, input, button { padding: 0.5rem; margin: 0.5rem 0; }
   </style>
 </head>
 <body>
-  <h2>Absensi Siswa - {{NAMA_SEKOLAH}}</h2>
-  <p><b>NPSN:</b> {{NPSN}}<br><b>Tahun Ajaran:</b> {{TA}}</p>
+  <nav id="infoSekolah">Memuat data sekolah...</nav>
 
-  <label>Pilih Kelas:
-    <select id="kelas"></select>
-  </label><br><br>
-
+  <label>Tanggal: <input type="date" id="tanggal"></label>
+  <label>Kelas:
+    <select id="kelas"><option value="">--Pilih--</option></select>
+  </label>
   <label>Role:
-    <select id="role"></select>
-  </label><br><br>
-
-  <label>Tanggal:
-    <input type="date" id="tanggal">
+    <select id="role"><option value="">--Pilih--</option></select>
   </label>
 
-  <table id="tabel">
-    <thead>
-      <tr>
-        <th>No</th><th>Nama</th><th>NISN</th><th>Status</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <button onclick="submit()">Kirim Absensi</button>
+  <form id="formAbsensi">
+    <table id="tabelSiswa" style="display:none;">
+      <thead><tr><th>NISN</th><th>Nama</th><th>Kehadiran</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button id="submitBtn" style="display:none;">Simpan Absensi</button>
+  </form>
 
   <script>
-    const NPSN = "{{NPSN}}";
-    const TOKEN = "{{TOKEN}}";
-    const POSTDATA = "{{POSTDATA}}";
-    const ROMBEL = {{ROMBEL}};
-    const ROLE = {{ROLE}};
-    const GID = "{{GID}}";
+    const API_BASE = location.origin;
+    const token = new URLSearchParams(location.search).get("token");
+    const infoSekolah = document.getElementById("infoSekolah");
+    const kelasSelect = document.getElementById("kelas");
+    const roleSelect = document.getElementById("role");
+    const tanggalInput = document.getElementById("tanggal");
+    const table = document.getElementById("tabelSiswa");
+    const tbody = table.querySelector("tbody");
+    const submitBtn = document.getElementById("submitBtn");
+    const form = document.getElementById("formAbsensi");
 
-    const kelasEl = document.getElementById("kelas");
-    const roleEl = document.getElementById("role");
-    const tanggalEl = document.getElementById("tanggal");
-    const tbody = document.querySelector("#tabel tbody");
+    let NPSN = "";
 
-    function todayStr() {
-      const d = new Date();
-      return d.toISOString().split("T")[0];
+    tanggalInput.value = new Date().toISOString().split("T")[0];
+
+    async function loadSekolah() {
+      const res = await fetch(`${API_BASE}/api?token=${token}`);
+      if (!res.ok) return infoSekolah.innerText = "Token tidak valid.";
+
+      const sekolah = await res.json();
+      NPSN = sekolah.NPSN;
+
+      infoSekolah.innerHTML = `<strong>${sekolah["NAMA SEKOLAH"]}</strong><br>NPSN: ${sekolah.NPSN} | Tahun Ajaran: ${sekolah.TA}`;
+
+      sekolah.ROMBEL.forEach(k => {
+        const opt = document.createElement("option");
+        opt.value = opt.text = k;
+        kelasSelect.appendChild(opt);
+      });
+
+      sekolah.ROLE.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r;
+        opt.text = r;
+        if (r === "Guru Kelas") opt.selected = true;
+        roleSelect.appendChild(opt);
+      });
     }
 
-    tanggalEl.value = todayStr();
+    kelasSelect.addEventListener("change", async () => {
+      const kelas = kelasSelect.value;
+      if (!kelas) return;
 
-    ROMBEL.forEach(k => {
-      const opt = document.createElement("option");
-      opt.value = opt.textContent = k;
-      kelasEl.appendChild(opt);
+      const res = await fetch(`${API_BASE}/api?token=${token}&kelas=${encodeURIComponent(kelas)}`);
+      const data = await res.json();
+      tbody.innerHTML = "";
+
+      if (data.length) {
+        data.forEach(s => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${s.NISN || ""}</td>
+            <td>${s.NAMA || ""}</td>
+            <td>
+              <select name="kehadiran[]" data-nisn="${s.NISN}" data-nama="${s.NAMA}">
+                <option selected>Hadir</option>
+                <option>Izin</option>
+                <option>Sakit</option>
+                <option>Alpa</option>
+              </select>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+        table.style.display = "table";
+        submitBtn.style.display = "inline-block";
+      } else {
+        tbody.innerHTML = "<tr><td colspan='3'>Tidak ada siswa</td></tr>";
+      }
     });
 
-    ROLE.forEach(r => {
-      const opt = document.createElement("option");
-      opt.value = opt.textContent = r;
-      roleEl.appendChild(opt);
-    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    roleEl.value = "Guru Kelas";
-
-    kelasEl.addEventListener("change", async () => {
-      const res = await fetch(`?token=${TOKEN}&kelas=${kelasEl.value}`);
-      const siswa = await res.json();
-      tbody.innerHTML = siswa.map((s, i) => `
-        <tr>
-          <td>${i + 1}</td>
-          <td>${s.NAMA}</td>
-          <td>${s.NISN}</td>
-          <td>
-            <select data-nama="${s.NAMA}" data-nisn="${s.NISN}">
-              <option selected>Hadir</option>
-              <option>Izin</option>
-              <option>Sakit</option>
-              <option>Alpa</option>
-            </select>
-          </td>
-        </tr>
-      `).join("");
-    });
-
-    kelasEl.dispatchEvent(new Event("change")); // Load awal
-
-    async function submit() {
       const payload = {
-        tanggal: tanggalEl.value,
+        tanggal: tanggalInput.value,
         npsn: NPSN,
-        kelas: kelasEl.value,
-        role: roleEl.value,
+        kelas: kelasSelect.value,
+        role: roleSelect.value,
         data: [...document.querySelectorAll("select[data-nama]")].map(el => ({
           nisn: el.dataset.nisn,
           nama: el.dataset.nama,
           status: el.value
         }))
       };
-      const res = await fetch(POSTDATA, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" }
-      });
-      alert("Terkirim! Status: " + res.status);
-    }
+
+      try {
+        const res = await fetch(`${API_BASE}/submit`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        alert(res.ok ? "Data absensi berhasil dikirim!" : "Gagal mengirim data.");
+      } catch (err) {
+        alert("Terjadi kesalahan saat mengirim.");
+        console.error(err);
+      }
+    });
+
+    loadSekolah();
   </script>
 </body>
 </html>
