@@ -38,17 +38,22 @@
     document.getElementById("tanggal").value = new Date().toISOString().split("T")[0];
 
     async function loadSekolah() {
-      if (!token) {
-        sekolahInfo.textContent = "Token tidak ditemukan.";
-        return;
-      }
-      const res = await fetch("?token=" + token);
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, "text/html");
+      if (!token) return sekolahInfo.textContent = "Token tidak ditemukan.";
 
-      sekolahInfo.innerHTML = doc.querySelector("nav").innerHTML;
-      kelasEl.innerHTML = doc.querySelector("#kelas").innerHTML;
-      roleEl.innerHTML = doc.querySelector("#role").innerHTML;
+      const res = await fetch("?token=" + token + "&json=1");
+      if (!res.ok) return sekolahInfo.textContent = "Token tidak valid.";
+
+      const sekolah = await res.json();
+      sekolahInfo.innerHTML = `
+        <strong>${sekolah["NAMA SEKOLAH"]}</strong><br/>
+        NPSN: ${sekolah.NPSN} | TA: ${sekolah.TA}
+      `;
+
+      kelasEl.innerHTML = `<option value="">--Pilih--</option>` +
+        sekolah.ROMBEL.map(k => `<option value="${k}">${k}</option>`).join("");
+
+      roleEl.innerHTML = `<option value="">--Pilih--</option>` +
+        sekolah.ROLE.map(r => `<option ${r === "Guru Kelas" ? "selected" : ""}>${r}</option>`).join("");
     }
 
     kelasEl.addEventListener("change", async () => {
