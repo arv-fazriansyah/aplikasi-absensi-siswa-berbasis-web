@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Absensi</title>
+  <title>Absensi Sekolah</title>
   <style>
     body { font-family: sans-serif; margin: 0; padding: 1rem; }
     nav { background: #0d6efd; color: white; padding: 1rem; margin-bottom: 1rem; }
@@ -13,7 +13,7 @@
   </style>
 </head>
 <body>
-  <nav id="infoSekolah">Memuat data sekolah...</nav>
+  <nav id="infoSekolah">Memuat...</nav>
 
   <label>Tanggal: <input type="date" id="tanggal" /></label>
   <label>Kelas: <select id="kelas"><option value="">--Pilih--</option></select></label>
@@ -29,45 +29,34 @@
 
   <script>
     const token = new URLSearchParams(location.search).get("token");
-    if (!token) {
-      document.body.innerHTML = "<p style='color:red'>Token tidak ditemukan di URL.</p>";
-      throw new Error("Token missing");
-    }
-
-    const tanggalEl = document.getElementById("tanggal");
-    tanggalEl.value = new Date().toISOString().split("T")[0];
-
-    const infoSekolah = document.getElementById("infoSekolah");
+    const sekolahInfo = document.getElementById("infoSekolah");
     const kelasEl = document.getElementById("kelas");
     const roleEl = document.getElementById("role");
     const form = document.getElementById("formAbsensi");
     const tbody = document.querySelector("#tabelSiswa tbody");
 
-    async function init() {
+    document.getElementById("tanggal").value = new Date().toISOString().split("T")[0];
+
+    async function loadSekolah() {
+      if (!token) {
+        sekolahInfo.textContent = "Token tidak ditemukan.";
+        return;
+      }
       const res = await fetch("?token=" + token);
       const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
 
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-
-      const nav = doc.querySelector("nav");
-      const kelasOpts = doc.querySelectorAll("select#kelas option");
-      const roleOpts = doc.querySelectorAll("select#role option");
-
-      infoSekolah.innerHTML = nav?.innerHTML || "Sekolah tidak ditemukan";
-      kelasEl.innerHTML = "";
-      roleEl.innerHTML = "";
-
-      kelasOpts.forEach(opt => kelasEl.appendChild(opt.cloneNode(true)));
-      roleOpts.forEach(opt => roleEl.appendChild(opt.cloneNode(true)));
+      sekolahInfo.innerHTML = doc.querySelector("nav").innerHTML;
+      kelasEl.innerHTML = doc.querySelector("#kelas").innerHTML;
+      roleEl.innerHTML = doc.querySelector("#role").innerHTML;
     }
 
     kelasEl.addEventListener("change", async () => {
       const kelas = kelasEl.value;
-      if (!kelas) return;
+      if (!kelas || !token) return;
+
       const res = await fetch("?token=" + token + "&kelas=" + encodeURIComponent(kelas));
       const data = await res.json();
-
       tbody.innerHTML = "";
       if (data.length) {
         data.forEach(siswa => {
@@ -92,34 +81,31 @@
       }
     });
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async e => {
       e.preventDefault();
       const payload = {
-        tanggal: tanggalEl.value,
+        tanggal: document.getElementById("tanggal").value,
         kelas: kelasEl.value,
         role: roleEl.value,
-        token: token,
         data: [...document.querySelectorAll("select[data-nama]")].map(el => ({
           nisn: el.dataset.nisn,
           nama: el.dataset.nama,
           status: el.value
         }))
       };
-
       try {
         const res = await fetch(location.pathname, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
-        alert(res.ok ? "Data berhasil dikirim!" : "Gagal mengirim data.");
-      } catch (err) {
-        alert("Gagal menghubungi server.");
-        console.error(err);
+        alert(res.ok ? "Data absensi berhasil dikirim!" : "Gagal mengirim data.");
+      } catch {
+        alert("Kesalahan saat mengirim data.");
       }
     });
 
-    init();
+    loadSekolah();
   </script>
 </body>
 </html>
