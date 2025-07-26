@@ -29,38 +29,42 @@
 
   <script>
     const token = new URLSearchParams(location.search).get("token");
-    const sekolahInfo = document.getElementById("infoSekolah");
+    const infoEl = document.getElementById("infoSekolah");
     const kelasEl = document.getElementById("kelas");
     const roleEl = document.getElementById("role");
     const form = document.getElementById("formAbsensi");
     const tbody = document.querySelector("#tabelSiswa tbody");
 
+    // Set tanggal hari ini
     document.getElementById("tanggal").value = new Date().toISOString().split("T")[0];
 
-    async function loadSekolah() {
-      if (!token) return sekolahInfo.textContent = "Token tidak ditemukan.";
-
-      const res = await fetch("?token=" + token + "&json=1");
-      if (!res.ok) return sekolahInfo.textContent = "Token tidak valid.";
-
-      const sekolah = await res.json();
-      sekolahInfo.innerHTML = `
+    function loadSekolah() {
+      const sekolah = window.SEKOLAH;
+      if (!sekolah) {
+        infoEl.textContent = "Gagal memuat data sekolah.";
+        return;
+      }
+      infoEl.innerHTML = `
         <strong>${sekolah["NAMA SEKOLAH"]}</strong><br/>
         NPSN: ${sekolah.NPSN} | TA: ${sekolah.TA}
       `;
 
-      kelasEl.innerHTML = `<option value="">--Pilih--</option>` +
+      kelasEl.innerHTML =
+        '<option value="">--Pilih--</option>' +
         sekolah.ROMBEL.map(k => `<option value="${k}">${k}</option>`).join("");
 
-      roleEl.innerHTML = `<option value="">--Pilih--</option>` +
-        sekolah.ROLE.map(r => `<option ${r === "Guru Kelas" ? "selected" : ""}>${r}</option>`).join("");
+      roleEl.innerHTML =
+        '<option value="">--Pilih--</option>' +
+        sekolah.ROLE.map(r =>
+          `<option${r === "Guru Kelas" ? " selected" : ""}>${r}</option>`
+        ).join("");
     }
 
+    // Load data siswa saat kelas dipilih
     kelasEl.addEventListener("change", async () => {
       const kelas = kelasEl.value;
       if (!kelas || !token) return;
-
-      const res = await fetch("?token=" + token + "&kelas=" + encodeURIComponent(kelas));
+      const res = await fetch(`?token=${token}&kelas=${encodeURIComponent(kelas)}`);
       const data = await res.json();
       tbody.innerHTML = "";
       if (data.length) {
@@ -86,6 +90,7 @@
       }
     });
 
+    // Submit form
     form.addEventListener("submit", async e => {
       e.preventDefault();
       const payload = {
@@ -110,6 +115,7 @@
       }
     });
 
+    // Initialize
     loadSekolah();
   </script>
 </body>
