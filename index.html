@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Absensi - ${sekolah["NAMA SEKOLAH"]}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    body { 
+      font-family: 'Inter', sans-serif; 
+    }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .status-select {
+      transition: all 0.2s ease;
+    }
+    
+    .status-hadir { 
+      background: linear-gradient(135deg, #10b981, #059669); 
+      color: white;
+    }
+    .status-izin { 
+      background: linear-gradient(135deg, #f59e0b, #d97706); 
+      color: white;
+    }
+    .status-sakit { 
+      background: linear-gradient(135deg, #3b82f6, #2563eb); 
+      color: white;
+    }
+    .status-alpa { 
+      background: linear-gradient(135deg, #ef4444, #dc2626); 
+      color: white;
+    }
+    
+    .animate-slide-up {
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(30px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+    
+    .loading-dots {
+      display: inline-block;
+    }
+    
+    .loading-dots::after {
+      content: '';
+      animation: dots 1.5s steps(4, end) infinite;
+    }
+    
+    @keyframes dots {
+      0%, 20% { content: ''; }
+      40% { content: '.'; }
+      60% { content: '..'; }
+      80%, 100% { content: '...'; }
+    }
+    
+    .pulse-ring {
+      animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(.33);
+      }
+      80%, 100% {
+        opacity: 0;
+      }
+    }
+    
+    .custom-select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 2.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+  <!-- Header -->
+  <header class="gradient-bg text-white sticky top-0 z-50 shadow-xl">
+    <div class="container mx-auto px-6 py-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="bg-white bg-opacity-20 rounded-full p-3">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold mb-1">${sekolah["NAMA SEKOLAH"]}</h1>
+            <div class="flex items-center space-x-6 text-sm opacity-90">
+              <span class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                NPSN: ${sekolah.NPSN}
+              </span>
+              <span class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/>
+                </svg>
+                TA: ${sekolah.TA}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center space-x-2 bg-white bg-opacity-20 rounded-full px-4 py-2">
+          <div class="w-2 h-2 bg-green-400 rounded-full pulse-ring"></div>
+          <span class="text-sm font-medium">Sistem Aktif</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-6 py-8">
+    <!-- Control Panel -->
+    <div class="glass-effect rounded-3xl shadow-2xl p-8 mb-8 card-hover">
+      <div class="flex items-center mb-6">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full p-3 mr-4">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">Pengaturan Absensi</h2>
+          <p class="text-gray-600 mt-1">Pilih tanggal, kelas, dan role untuk memulai absensi</p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="space-y-3">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/>
+            </svg>
+            Tanggal
+          </label>
+          <input type="date" id="tanggal" 
+                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 bg-white hover:border-gray-300" />
+        </div>
+        
+        <div class="space-y-3">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+            </svg>
+            Kelas
+          </label>
+          <select id="kelas" 
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 bg-white hover:border-gray-300 custom-select appearance-none">
+            <option value="">-- Pilih Kelas --</option>
+            ${kelasOptions}
+          </select>
+        </div>
+        
+        <div class="space-y-3">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+            </svg>
+            Role
+          </label>
+          <select id="role" 
+                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 bg-white hover:border-gray-300 custom-select appearance-none">
+            <option value="">-- Pilih Role --</option>
+            ${roleOptions}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="hidden glass-effect rounded-3xl shadow-xl p-12 text-center animate-slide-up">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mb-4">
+        <svg class="w-8 h-8 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-2">Memuat Data Siswa</h3>
+      <p class="text-gray-600">Mohon tunggu sebentar<span class="loading-dots"></span></p>
+    </div>
+
+    <!-- Attendance Form -->
+    <form id="formAbsensi">
+      <div id="tabelSiswa" class="hidden animate-slide-up">
+        <div class="glass-effect rounded-3xl shadow-2xl overflow-hidden card-hover">
+          <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 text-white p-6">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                </svg>
+                <div>
+                  <h3 class="text-xl font-bold">Daftar Kehadiran Siswa</h3>
+                  <p class="text-indigo-100 text-sm mt-1">Pilih status kehadiran untuk setiap siswa</p>
+                </div>
+              </div>
+              <div class="bg-white bg-opacity-20 rounded-full px-4 py-2">
+                <span class="text-sm font-medium" id="studentCount">0 Siswa</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">NISN</th>
+                  <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nama Siswa</th>
+                  <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Status Kehadiran</th>
+                </tr>
+              </thead>
+              <tbody id="siswaTableBody" class="bg-white divide-y divide-gray-100">
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="mt-8 flex justify-center">
+          <button type="submit" id="submitBtn" 
+                  class="hidden bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-300 shadow-xl hover:shadow-2xl">
+            <svg class="w-6 h-6 mr-3 inline" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+            </svg>
+            Simpan Kehadiran
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const NPSN = "${sekolah.NPSN}";
+    const POSTDATA = location.pathname;
+
+    document.getElementById("tanggal").value = new Date().toISOString().split("T")[0];
+
+    const token = "${token}";
+    const form = document.getElementById("formAbsensi");
+    const tbody = document.getElementById("siswaTableBody");
+    const kelasEl = document.getElementById("kelas");
+    const loadingState = document.getElementById("loadingState");
+
+    kelasEl.addEventListener("change", async function() {
+      const kelas = kelasEl.value;
+      if (!kelas) {
+        document.getElementById("tabelSiswa").classList.add("hidden");
+        return;
+      }
+
+      // Show loading
+      loadingState.classList.remove("hidden");
+      document.getElementById("tabelSiswa").classList.add("hidden");
+
+      try {
+        const res = await fetch("?token=" + token + "&kelas=" + encodeURIComponent(kelas));
+        const data = await res.json();
+        tbody.innerHTML = "";
+
+        if (data.length) {
+          document.getElementById("studentCount").textContent = `${data.length} Siswa`;
+          
+          data.forEach((siswa, index) => {
+            const row = document.createElement("tr");
+            row.className = "hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200";
+            
+            const initials = (siswa.NAMA || "").split(' ').map(n => n.charAt(0)).join('').substring(0, 2).toUpperCase();
+            const colors = ['from-pink-500 to-rose-500', 'from-blue-500 to-indigo-500', 'from-green-500 to-emerald-500', 'from-purple-500 to-violet-500', 'from-yellow-500 to-orange-500'];
+            const colorClass = colors[index % colors.length];
+            
+            row.innerHTML = `
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="text-sm font-mono font-medium text-gray-900 bg-gray-100 px-3 py-1 rounded-full">${siswa.NISN || ""}</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-12 w-12">
+                    <div class="h-12 w-12 rounded-full bg-gradient-to-r ${colorClass} flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                      ${initials}
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-semibold text-gray-900">${siswa.NAMA || ""}</div>
+                    <div class="text-xs text-gray-500">Siswa Kelas ${kelas}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <select name="kehadiran[]" data-nisn="${siswa.NISN || ""}" data-nama="${siswa.NAMA || ""}" 
+                        class="status-select px-4 py-2 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 bg-white font-medium">
+                  <option value="Hadir" selected>✅ Hadir</option>
+                  <option value="Izin">📝 Izin</option>
+                  <option value="Sakit">🏥 Sakit</option>
+                  <option value="Alpa">❌ Alpa</option>
+                </select>
+              </td>`;
+            tbody.appendChild(row);
+          });
+
+          // Hide loading and show table
+          setTimeout(() => {
+            loadingState.classList.add("hidden");
+            document.getElementById("tabelSiswa").classList.remove("hidden");
+            document.getElementById("submitBtn").classList.remove("hidden");
+          }, 800);
+          
+          // Add status change listeners
+          document.querySelectorAll('.status-select').forEach(select => {
+            select.addEventListener('change', function() {
+              updateStatusStyle(this);
+            });
+            updateStatusStyle(select);
+          });
+          
+        } else {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="3" class="px-6 py-12 text-center">
+                <div class="flex flex-col items-center">
+                  <svg class="w-16 h-16 text-gray-300 mb-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                  <h3 class="text-lg font-semibold text-gray-500 mb-2">Tidak Ada Siswa</h3>
+                  <p class="text-gray-400">Kelas ini belum memiliki data siswa</p>
+                </div>
+              </td>
+            </tr>`;
+          setTimeout(() => {
+            loadingState.classList.add("hidden");
+            document.getElementById("tabelSiswa").classList.remove("hidden");
+          }, 800);
+        }
+      } catch (error) {
+        loadingState.classList.add("hidden");
+        console.error('Error loading students:', error);
+      }
+    });
+
+    function updateStatusStyle(select) {
+      const value = select.value;
+      select.className = select.className.replace(/status-\w+/g, '');
+      
+      switch(value) {
+        case 'Hadir':
+          select.classList.add('status-hadir');
+          break;
+        case 'Izin':
+          select.classList.add('status-izin');
+          break;
+        case 'Sakit':
+          select.classList.add('status-sakit');
+          break;
+        case 'Alpa':
+          select.classList.add('status-alpa');
+          break;
+      }
+    }
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById("submitBtn");
+      const originalText = submitBtn.innerHTML;
+      
+      // Show loading state
+      submitBtn.innerHTML = `
+        <svg class="w-5 h-5 mr-2 inline animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Menyimpan Data...
+      `;
+      submitBtn.disabled = true;
+      
+      const payload = {
+        tanggal: document.getElementById("tanggal").value,
+        npsn: NPSN,
+        kelas: kelasEl.value,
+        role: document.getElementById("role").value,
+        data: [...document.querySelectorAll("select[data-nama]")].map(el => ({
+          nisn: el.dataset.nisn,
+          nama: el.dataset.nama,
+          status: el.value
+        }))
+      };
+
+      try {
+        const res = await fetch(POSTDATA, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          // Success animation
+          submitBtn.innerHTML = `
+            <svg class="w-6 h-6 mr-2 inline" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+            </svg>
+            Berhasil Disimpan!
+          `;
+          submitBtn.classList.remove('from-emerald-500', 'to-teal-600', 'hover:from-emerald-600', 'hover:to-teal-700');
+          submitBtn.classList.add('from-green-500', 'to-emerald-600', 'hover:from-green-600', 'hover:to-emerald-700');
+          
+          setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.classList.remove('from-green-500', 'to-emerald-600', 'hover:from-green-600', 'hover:to-emerald-700');
+            submitBtn.classList.add('from-emerald-500', 'to-teal-600', 'hover:from-emerald-600', 'hover:to-teal-700');
+            submitBtn.disabled = false;
+          }, 3000);
+        } else {
+          throw new Error('Failed to submit');
+        }
+      } catch (err) {
+        submitBtn.innerHTML = `
+          <svg class="w-5 h-5 mr-2 inline" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"/>
+          </svg>
+          Gagal Menyimpan
+        `;
+        submitBtn.classList.remove('from-emerald-500', 'to-teal-600');
+        submitBtn.classList.add('from-red-500', 'to-red-600');
+        
+        setTimeout(() => {
+          submitBtn.innerHTML = originalText;
+          submitBtn.classList.remove('from-red-500', 'to-red-600');
+          submitBtn.classList.add('from-emerald-500', 'to-teal-600');
+          submitBtn.disabled = false;
+        }, 3000);
+        
+        console.error(err);
+      }
+    });
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9650c87a365cfd71',t:'MTc1MzUwMDI1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
