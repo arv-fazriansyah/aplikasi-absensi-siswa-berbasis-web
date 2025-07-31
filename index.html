@@ -2,63 +2,434 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Absensi Siswa</title>
   <style>
-    body { font-family: sans-serif; padding: 1rem; }
-    select, input[type="date"], button { margin: 0.5rem 0; padding: 0.3rem; }
-    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 4px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      color: #1a202c;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .school-info {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-top: 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .school-info p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .form-section {
+      padding: 2rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="date"], select {
+      padding: 0.875rem 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: white;
+      color: #374151;
+    }
+
+    input[type="date"]:focus, select:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      transform: translateY(-1px);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.75rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 2.5rem;
+    }
+
+    .table-container {
+      margin-top: 2rem;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e5e7eb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+
+    th {
+      padding: 1.25rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: #374151;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid #f3f4f6;
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: all 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+      transform: translateX(4px);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .student-name {
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .student-nisn {
+      color: #6b7280;
+      font-size: 0.875rem;
+      font-family: 'Monaco', 'Menlo', monospace;
+    }
+
+    .status-select {
+      padding: 0.5rem 0.75rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      min-width: 120px;
+      transition: all 0.2s ease;
+    }
+
+    .status-select:focus {
+      outline: none;
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      margin-top: 1.5rem;
+      min-width: 150px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: #6b7280;
+    }
+
+    .empty-state-text {
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-subtext {
+      font-size: 0.875rem;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      
+      .header {
+        padding: 1.5rem 1rem;
+      }
+      
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .form-section {
+        padding: 1.5rem 1rem;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      table {
+        font-size: 0.875rem;
+      }
+      
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
-<h3>Absensi Siswa - __NAMA_SEKOLAH__</h3>
-<p><strong>NPSN:</strong> __NPSN__ | <strong>Tahun Ajaran:</strong> __TAHUN_AJARAN__</p>
+  <div class="container">
+    <div class="header">
+      <h1>Sistem Absensi Siswa</h1>
+      <div class="school-info">
+        <p><strong>Nama Sekolah:</strong> __NAMA_SEKOLAH__</p>
+        <p><strong>NPSN:</strong> __NPSN__ | <strong>Tahun Ajaran:</strong> __TAHUN_AJARAN__</p>
+      </div>
+    </div>
 
-  <label>Tanggal: <input type="date" id="tanggal"></label><br>
-  <label>Kelas: 
-    <select id="kelas"><option value="">--Pilih--</option>__KELAS_OPTIONS__</select>
-  </label><br>
-  <label>Role:
-    <select id="role">__ROLE_OPTIONS__</select>
-  </label>
+    <div class="form-section">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="tanggal">Tanggal</label>
+          <input type="date" id="tanggal">
+        </div>
+        
+        <div class="form-group">
+          <label for="kelas">Kelas</label>
+          <select id="kelas">
+            <option value="">Pilih Kelas</option>
+            __KELAS_OPTIONS__
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role">
+            __ROLE_OPTIONS__
+          </select>
+        </div>
+      </div>
 
-  <form id="formAbsensi">
-    <table id="tabelSiswa" style="display:none">
-      <thead><tr><th>NISN</th><th>Nama</th><th>Status</th></tr></thead>
-      <tbody></tbody>
-    </table>
-    <button type="submit" style="display:none" id="submitBtn">Simpan</button>
-  </form>
+      <form id="formAbsensi">
+        <div class="table-container" id="tabelSiswa" style="display:none">
+          <table>
+            <thead>
+              <tr>
+                <th>NISN</th>
+                <th>Nama Siswa</th>
+                <th>Status Kehadiran</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="submit" class="submit-btn" style="display:none" id="submitBtn">
+          Simpan Absensi
+        </button>
+      </form>
+    </div>
+  </div>
 
 <script>
 const token="__TOKEN__"; 
 const NPSN="__NPSN__"; 
 const tbody=document.querySelector("#tabelSiswa tbody");
 const submitBtn=document.getElementById("submitBtn");
+const tabelSiswa=document.getElementById("tabelSiswa");
+const kelas=document.getElementById("kelas");
+const tanggal=document.getElementById("tanggal");
+const role=document.getElementById("role");
+const formAbsensi=document.getElementById("formAbsensi");
 
 tanggal.value=new Date().toISOString().split("T")[0];
 
 kelas.addEventListener("change", async()=>{
-  if(!kelas.value) return;
-  const res=await fetch(`?token=${token}&kelas=${kelas.value}`);
-  const data=await res.json();
-  tbody.innerHTML="";
-  if(data.length){
-    data.forEach(s=>tbody.innerHTML+=`<tr><td>${s.NISN}</td><td>${s.NAMA}</td>
-      <td><select data-nisn="${s.NISN}" data-nama="${s.NAMA}">
-        <option>Hadir</option><option>Izin</option><option>Sakit</option><option>Alpa</option>
-      </select></td></tr>`);
-    tabelSiswa.style.display="table"; submitBtn.style.display="inline";
-  } else tbody.innerHTML="<tr><td colspan=3>Tidak ada siswa</td></tr>";
+  if(!kelas.value) {
+    tabelSiswa.style.display="none";
+    submitBtn.style.display="none";
+    return;
+  }
+  
+  // Show loading state
+  tbody.innerHTML='<tr><td colspan="3" class="empty-state"><div class="loading"></div></td></tr>';
+  tabelSiswa.style.display="block";
+  
+  try {
+    const res=await fetch(`?token=${token}&kelas=${kelas.value}`);
+    const data=await res.json();
+    tbody.innerHTML="";
+    
+    if(data.length){
+      data.forEach(s=>{
+        tbody.innerHTML+=`
+          <tr>
+            <td><span class="student-nisn">${s.NISN}</span></td>
+            <td><span class="student-name">${s.NAMA}</span></td>
+            <td>
+              <select class="status-select" data-nisn="${s.NISN}" data-nama="${s.NAMA}">
+                <option value="Hadir">Hadir</option>
+                <option value="Izin">Izin</option>
+                <option value="Sakit">Sakit</option>
+                <option value="Alpa">Alpa</option>
+              </select>
+            </td>
+          </tr>`;
+      });
+      submitBtn.style.display="inline-block";
+    } else {
+      tbody.innerHTML=`
+        <tr>
+          <td colspan="3" class="empty-state">
+            <div class="empty-state-text">Tidak ada data siswa</div>
+            <div class="empty-state-subtext">Silakan pilih kelas yang lain</div>
+          </td>
+        </tr>`;
+      submitBtn.style.display="none";
+    }
+  } catch(error) {
+    tbody.innerHTML=`
+      <tr>
+        <td colspan="3" class="empty-state">
+          <div class="empty-state-text">Gagal memuat data</div>
+          <div class="empty-state-subtext">Silakan coba lagi</div>
+        </td>
+      </tr>`;
+    submitBtn.style.display="none";
+  }
 });
 
 formAbsensi.addEventListener("submit", async e=>{
   e.preventDefault();
-  const data=[...document.querySelectorAll("select[data-nama]")].map(el=>({nisn:el.dataset.nisn,nama:el.dataset.nama,status:el.value}));
-  const payload={tanggal:tanggal.value,npsn:NPSN,kelas:kelas.value,role:role.value,data};
-  const res=await fetch(location.pathname,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-  alert(res.ok?"Berhasil disimpan":"Gagal kirim data");
+  
+  const originalText = submitBtn.textContent;
+  submitBtn.innerHTML = '<div class="loading"></div> Menyimpan...';
+  submitBtn.disabled = true;
+  
+  try {
+    const data=[...document.querySelectorAll("select[data-nama]")].map(el=>({
+      nisn:el.dataset.nisn,
+      nama:el.dataset.nama,
+      status:el.value
+    }));
+    
+    const payload={
+      tanggal:tanggal.value,
+      npsn:NPSN,
+      kelas:kelas.value,
+      role:role.value,
+      data
+    };
+    
+    const res=await fetch(location.pathname,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    });
+    
+    if(res.ok) {
+      alert("✅ Data absensi berhasil disimpan!");
+    } else {
+      throw new Error('Failed to save');
+    }
+  } catch(error) {
+    alert("❌ Gagal menyimpan data. Silakan coba lagi.");
+  } finally {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  }
 });
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9679ab3f92868814',t:'MTc1MzkyODk3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
