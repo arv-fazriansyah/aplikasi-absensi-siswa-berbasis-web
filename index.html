@@ -1,70 +1,64 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Absensi Siswa - __NAMA_SEKOLAH__</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Absensi Siswa</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 10px; }
-    header { text-align: center; margin-bottom: 20px; }
-    select, button { width: 100%; padding: 8px; margin: 5px 0; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
-    .submit { background: green; color: white; }
+    body { font-family: sans-serif; padding: 1rem; }
+    select, input[type="date"], button { margin: 0.5rem 0; padding: 0.3rem; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 4px; }
   </style>
 </head>
 <body>
-  <header>
-    <h2>Absensi - __NAMA_SEKOLAH__</h2>
-    <small>NPSN: __NPSN__ | Tahun Ajaran: __TAHUN_AJARAN__</small>
-  </header>
+  <h3>Absensi Siswa</h3>
+  <p><strong>NPSN:</strong> __NPSN__</p>
 
-  <label>Kelas:</label>
-  <select id="kelas">__KELAS_OPTIONS__</select>
+  <label>Tanggal: <input type="date" id="tanggal"></label><br>
+  <label>Kelas: 
+    <select id="kelas"><option value="">--Pilih--</option>__KELAS_OPTIONS__</select>
+  </label><br>
+  <label>Role:
+    <select id="role">__ROLE_OPTIONS__</select>
+  </label>
 
-  <label>Role:</label>
-  <select id="role">__ROLE_OPTIONS__</select>
-
-  <table id="tabel">
-    <thead><tr><th>Nama</th><th>Status</th></tr></thead>
-    <tbody></tbody>
-  </table>
-
-  <button class="submit" id="kirim">Kirim Absensi</button>
+  <form id="formAbsensi">
+    <table id="tabelSiswa" style="display:none">
+      <thead><tr><th>NISN</th><th>Nama</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button type="submit" style="display:none" id="submitBtn">Simpan</button>
+  </form>
 
 <script>
-const token = "__TOKEN__";
-const tabel = document.querySelector("#tabel tbody");
-const kelasSelect = document.querySelector("#kelas");
-const roleSelect = document.querySelector("#role");
+const token="__TOKEN__"; 
+const NPSN="__NPSN__"; 
+const tbody=document.querySelector("#tabelSiswa tbody");
+const submitBtn=document.getElementById("submitBtn");
 
-async function loadSiswa() {
-  const res = await fetch(`?token=${token}&kelas=${kelasSelect.value}`);
-  const data = await res.json();
-  tabel.innerHTML = data.map(s => 
-    `<tr><td>${s.NAMA}</td>
-    <td><select>
-      <option>Hadir</option><option>Sakit</option>
-      <option>Izin</option><option>Alpa</option>
-    </select></td></tr>`
-  ).join("");
-}
+tanggal.value=new Date().toISOString().split("T")[0];
 
-kelasSelect.onchange = loadSiswa;
-loadSiswa();
+kelas.addEventListener("change", async()=>{
+  if(!kelas.value) return;
+  const res=await fetch(`?token=${token}&kelas=${kelas.value}`);
+  const data=await res.json();
+  tbody.innerHTML="";
+  if(data.length){
+    data.forEach(s=>tbody.innerHTML+=`<tr><td>${s.NISN}</td><td>${s.NAMA}</td>
+      <td><select data-nisn="${s.NISN}" data-nama="${s.NAMA}">
+        <option>Hadir</option><option>Izin</option><option>Sakit</option><option>Alpa</option>
+      </select></td></tr>`);
+    tabelSiswa.style.display="table"; submitBtn.style.display="inline";
+  } else tbody.innerHTML="<tr><td colspan=3>Tidak ada siswa</td></tr>";
+});
 
-document.querySelector("#kirim").onclick = async () => {
-  const absensi = [...tabel.querySelectorAll("tr")].map(tr => ({
-    token, 
-    kelas: kelasSelect.value,
-    role: roleSelect.value,
-    nama: tr.cells[0].textContent,
-    status: tr.cells[1].querySelector("select").value
-  }));
-
-  await fetch("", { method: "POST", body: JSON.stringify(absensi) });
-  alert("Absensi terkirim!");
-};
+formAbsensi.addEventListener("submit", async e=>{
+  e.preventDefault();
+  const data=[...document.querySelectorAll("select[data-nama]")].map(el=>({nisn:el.dataset.nisn,nama:el.dataset.nama,status:el.value}));
+  const payload={tanggal:tanggal.value,npsn:NPSN,kelas:kelas.value,role:role.value,data};
+  const res=await fetch(location.pathname,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  alert(res.ok?"Berhasil disimpan":"Gagal kirim data");
+});
 </script>
 </body>
 </html>
