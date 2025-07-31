@@ -142,19 +142,13 @@
       cursor: pointer;
     }
     
-    .table-container {
-      background: #f8fafc;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-top: 2rem;
-      display: none;
-    }
+
     
     .table-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin: 2rem 0 1rem 0;
     }
     
     .table-title {
@@ -390,24 +384,23 @@
       </div>
 
     <form id="formAbsensi">
-      <div class="table-container" id="tableContainer">
-          <div class="table-header">
-            <h3 class="table-title">Daftar Siswa</h3>
-            <div class="student-count" id="studentCount">0 Siswa</div>
-          </div>
-          <div class="table-wrapper">
-            <table id="tabelSiswa">
-              <thead>
-                <tr>
-                  <th>NISN</th>
-                  <th>Nama Siswa</th>
-                  <th>Status Kehadiran</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
+      <div class="table-header" id="tableHeader" style="display: none;">
+        <h3 class="table-title">Daftar Siswa</h3>
+        <div class="student-count" id="studentCount">0 Siswa</div>
+      </div>
+      
+      <div class="table-wrapper" id="tableWrapper" style="display: none;">
+        <table id="tabelSiswa">
+          <thead>
+            <tr>
+              <th>NISN</th>
+              <th>Nama Siswa</th>
+              <th>Status Kehadiran</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
       
       <div class="submit-container" id="submitContainer">
         <button type="submit" class="submit-btn" id="submitBtn">Simpan Absensi</button>
@@ -420,7 +413,6 @@ const token="__TOKEN__";
 const NPSN="__NPSN__"; 
 const tbody=document.querySelector("#tabelSiswa tbody");
 const submitBtn=document.getElementById("submitBtn");
-const tableContainer=document.getElementById("tableContainer");
 const submitContainer=document.getElementById("submitContainer");
 const studentCount=document.getElementById("studentCount");
 
@@ -428,7 +420,8 @@ tanggal.value=new Date().toISOString().split("T")[0];
 
 kelas.addEventListener("change", async()=>{
   if(!kelas.value) {
-    tableContainer.style.display="none";
+    document.getElementById("tableHeader").style.display="none";
+    document.getElementById("tableWrapper").style.display="none";
     submitContainer.style.display="none";
     return;
   }
@@ -452,7 +445,8 @@ kelas.addEventListener("change", async()=>{
           </select>
         </td>
       </tr>`);
-    tableContainer.style.display="block";
+    document.getElementById("tableHeader").style.display="flex";
+    document.getElementById("tableWrapper").style.display="block";
     submitContainer.style.display="flex";
   } else {
     tbody.innerHTML=`
@@ -465,7 +459,8 @@ kelas.addEventListener("change", async()=>{
         </td>
       </tr>`;
     studentCount.textContent = "0 Siswa";
-    tableContainer.style.display="block";
+    document.getElementById("tableHeader").style.display="flex";
+    document.getElementById("tableWrapper").style.display="block";
     submitContainer.style.display="none";
   }
 });
@@ -513,5 +508,5 @@ formAbsensi.addEventListener("submit", async e=>{
   }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9679cc72373e8814',t:'MTc1MzkzMDMzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9679d25f44418814',t:'MTc1MzkzMDU3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
