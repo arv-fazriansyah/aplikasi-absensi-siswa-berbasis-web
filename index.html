@@ -96,7 +96,7 @@
       font-size: 1rem;
     }
     
-    .form-section {
+    .container {
       padding: 2rem;
     }
     
@@ -227,7 +227,8 @@
       background: white;
       cursor: pointer;
       transition: all 0.2s ease;
-      min-width: 100px;
+      width: 100%;
+      max-width: 120px;
     }
     
     .status-select:focus {
@@ -327,7 +328,7 @@
         font-size: 1.5rem;
       }
       
-      .form-section {
+      .container {
         padding: 1.5rem 1rem;
       }
       
@@ -370,10 +371,7 @@
   </nav>
 
   <div class="container">
-
-    
-    <div class="form-section">
-      <div class="form-grid">
+    <div class="form-grid">
         <div class="form-group">
           <label for="tanggal">Tanggal</label>
           <input type="date" id="tanggal">
@@ -391,8 +389,8 @@
         </div>
       </div>
 
-      <form id="formAbsensi">
-        <div class="table-container" id="tableContainer">
+    <form id="formAbsensi">
+      <div class="table-container" id="tableContainer">
           <div class="table-header">
             <h3 class="table-title">Daftar Siswa</h3>
             <div class="student-count" id="studentCount">0 Siswa</div>
@@ -410,12 +408,11 @@
             </table>
           </div>
         </div>
-        
-        <div class="submit-container" id="submitContainer">
-          <button type="submit" class="submit-btn" id="submitBtn">Simpan Absensi</button>
-        </div>
-      </form>
-    </div>
+      
+      <div class="submit-container" id="submitContainer">
+        <button type="submit" class="submit-btn" id="submitBtn">Simpan Absensi</button>
+      </div>
+    </form>
   </div>
 
 <script>
@@ -516,5 +513,5 @@ formAbsensi.addEventListener("submit", async e=>{
   }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9679c8eac26a8814',t:'MTc1MzkzMDE5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9679cc72373e8814',t:'MTc1MzkzMDMzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
