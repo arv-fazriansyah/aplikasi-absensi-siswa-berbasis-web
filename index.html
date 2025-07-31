@@ -105,56 +105,7 @@
 
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <!-- Dashboard Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Siswa</p>
-            <p id="totalStudents" class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
-          </div>
-          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-            <i class="fas fa-users text-blue-600 dark:text-blue-400"></i>
-          </div>
-        </div>
-      </div>
-      
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Hadir</p>
-            <p id="presentCount" class="text-2xl font-bold text-green-600">0</p>
-          </div>
-          <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-            <i class="fas fa-check text-green-600 dark:text-green-400"></i>
-          </div>
-        </div>
-      </div>
-      
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Tidak Hadir</p>
-            <p id="absentCount" class="text-2xl font-bold text-red-600">0</p>
-          </div>
-          <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center">
-            <i class="fas fa-times text-red-600 dark:text-red-400"></i>
-          </div>
-        </div>
-      </div>
-      
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Persentase</p>
-            <p id="attendancePercentage" class="text-2xl font-bold text-blue-600">0%</p>
-          </div>
-          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-            <i class="fas fa-chart-pie text-blue-600 dark:text-blue-400"></i>
-          </div>
-        </div>
-      </div>
-    </div>
+
 
     <!-- Control Panel -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
@@ -192,29 +143,7 @@
         </div>
       </div>
       
-      <!-- Search and Filters -->
-      <div class="flex flex-col sm:flex-row gap-4">
-        <div class="flex-1">
-          <div class="relative">
-            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input 
-              type="text" 
-              id="searchInput" 
-              placeholder="Cari nama siswa atau NISN..." 
-              class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-          </div>
-        </div>
-        
-        <div class="flex gap-2">
-          <button id="bulkPresentBtn" class="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
-            <i class="fas fa-check mr-2"></i>Semua Hadir
-          </button>
-          <button id="exportBtn" class="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-            <i class="fas fa-download mr-2"></i>Export
-          </button>
-        </div>
-      </div>
+
     </div>
 
     <!-- Students Section -->
@@ -238,26 +167,44 @@
           <p>Silakan pilih kelas untuk menampilkan daftar siswa</p>
         </div>
       </div>
+      
+      <!-- Stats Section -->
+      <div id="statsSection" class="hidden border-t border-gray-200 dark:border-gray-700 p-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="text-center">
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Siswa</p>
+            <p id="totalStudents" class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+          </div>
+          <div class="text-center">
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Hadir</p>
+            <p id="presentCount" class="text-2xl font-bold text-green-600">0</p>
+          </div>
+          <div class="text-center">
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Tidak Hadir</p>
+            <p id="absentCount" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+          <div class="text-center">
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Persentase</p>
+            <p id="attendancePercentage" class="text-2xl font-bold text-blue-600">0%</p>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button id="saveBtn" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+            <i class="fas fa-save"></i>
+            Simpan Absensi
+          </button>
+          <button id="resetBtn" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+            <i class="fas fa-undo"></i>
+            Reset
+          </button>
+        </div>
+      </div>
     </div>
   </main>
 
-  <!-- Floating Action Button -->
-  <div id="fabContainer" class="fixed bottom-6 right-6 opacity-0 transition-opacity duration-300">
-    <div id="fabMenu" class="absolute bottom-16 right-0 space-y-2 opacity-0 transform scale-95 transition-all duration-200">
-      <button id="saveBtn" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-lg">
-        <i class="fas fa-save"></i>
-        <span class="hidden sm:inline">Simpan</span>
-      </button>
-      <button id="resetBtn" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-lg">
-        <i class="fas fa-undo"></i>
-        <span class="hidden sm:inline">Reset</span>
-      </button>
-    </div>
-    
-    <button id="fabToggle" class="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200">
-      <i class="fas fa-plus transition-transform duration-200"></i>
-    </button>
-  </div>
+
 
   <!-- Toast Notifications -->
   <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
@@ -270,12 +217,11 @@
     const elements = {
       studentsGrid: document.getElementById("studentsGrid"),
       studentsSection: document.getElementById("studentsSection"),
-      fabContainer: document.getElementById("fabContainer"),
+      statsSection: document.getElementById("statsSection"),
       studentCounter: document.getElementById("studentCounter"),
       tanggal: document.getElementById("tanggal"),
       kelas: document.getElementById("kelas"),
       role: document.getElementById("role"),
-      searchInput: document.getElementById("searchInput"),
       themeToggle: document.getElementById("themeToggle"),
       currentTime: document.getElementById("currentTime"),
       currentDate: document.getElementById("currentDate"),
@@ -284,12 +230,8 @@
       absentCount: document.getElementById("absentCount"),
       attendancePercentage: document.getElementById("attendancePercentage"),
       progressBar: document.querySelector("#progressBar > div"),
-      fabToggle: document.getElementById("fabToggle"),
-      fabMenu: document.getElementById("fabMenu"),
       saveBtn: document.getElementById("saveBtn"),
-      resetBtn: document.getElementById("resetBtn"),
-      bulkPresentBtn: document.getElementById("bulkPresentBtn"),
-      exportBtn: document.getElementById("exportBtn")
+      resetBtn: document.getElementById("resetBtn")
     };
 
     let studentsData = [];
@@ -308,13 +250,9 @@
 
     function setupEventListeners() {
       elements.kelas.addEventListener("change", loadStudents);
-      elements.searchInput.addEventListener("input", filterStudents);
       elements.themeToggle.addEventListener("click", toggleTheme);
-      elements.fabToggle.addEventListener("click", toggleFabMenu);
       elements.saveBtn.addEventListener("click", saveAttendance);
       elements.resetBtn.addEventListener("click", resetAttendance);
-      elements.bulkPresentBtn.addEventListener("click", markAllPresent);
-      elements.exportBtn.addEventListener("click", exportData);
     }
 
     function updateClock() {
@@ -329,29 +267,30 @@
     }
 
     function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      const html = document.documentElement;
+      const isDark = html.classList.contains('dark');
+      
+      if (isDark) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
     }
 
     function loadTheme() {
       const theme = localStorage.getItem('theme');
-      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (theme === 'dark' || (!theme && prefersDark)) {
         document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
     }
 
-    function toggleFabMenu() {
-      const isOpen = elements.fabMenu.classList.contains('opacity-100');
-      if (isOpen) {
-        elements.fabMenu.classList.remove('opacity-100', 'scale-100');
-        elements.fabMenu.classList.add('opacity-0', 'scale-95');
-        elements.fabToggle.querySelector('i').style.transform = 'rotate(0deg)';
-      } else {
-        elements.fabMenu.classList.remove('opacity-0', 'scale-95');
-        elements.fabMenu.classList.add('opacity-100', 'scale-100');
-        elements.fabToggle.querySelector('i').style.transform = 'rotate(45deg)';
-      }
-    }
+
 
     async function loadStudents() {
       if (!elements.kelas.value) {
@@ -379,7 +318,7 @@
 
     function renderStudents() {
       const container = document.createElement("div");
-      container.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
+      container.className = "space-y-4";
       
       filteredStudents.forEach((student, index) => {
         const card = createStudentCard(student, index);
@@ -429,15 +368,7 @@
       return card;
     }
 
-    function filterStudents() {
-      const query = elements.searchInput.value.toLowerCase();
-      filteredStudents = studentsData.filter(student => 
-        student.NAMA.toLowerCase().includes(query) || 
-        student.NISN.includes(query)
-      );
-      renderStudents();
-      updateStats();
-    }
+
 
     function updateStats() {
       const total = filteredStudents.length;
@@ -464,13 +395,12 @@
     function showStudentsSection() {
       elements.studentsSection.classList.remove("opacity-0", "translate-y-5");
       elements.studentsSection.classList.add("slide-up");
-      elements.fabContainer.classList.remove("opacity-0");
-      elements.fabContainer.classList.add("fade-in");
+      elements.statsSection.classList.remove("hidden");
     }
 
     function hideStudentsSection() {
       elements.studentsSection.classList.add("opacity-0", "translate-y-5");
-      elements.fabContainer.classList.add("opacity-0");
+      elements.statsSection.classList.add("hidden");
       resetStats();
     }
 
@@ -502,13 +432,6 @@
       elements.absentCount.textContent = '0';
       elements.attendancePercentage.textContent = '0%';
       elements.progressBar.style.width = '0%';
-    }
-
-    function markAllPresent() {
-      const selects = document.querySelectorAll("select[data-nama]");
-      selects.forEach(select => select.value = 'Hadir');
-      updateStats();
-      showToast('Semua siswa ditandai hadir', 'success');
     }
 
     function resetAttendance() {
@@ -562,41 +485,7 @@
       }
     }
 
-    function exportData() {
-      const selects = document.querySelectorAll("select[data-nama]");
-      if (selects.length === 0) {
-        showToast('Tidak ada data untuk diekspor', 'warning');
-        return;
-      }
 
-      const data = [...selects].map(select => ({
-        NISN: select.dataset.nisn,
-        Nama: select.dataset.nama,
-        Status: select.value,
-        Tanggal: elements.tanggal.value,
-        Kelas: elements.kelas.value
-      }));
-
-      const csv = convertToCSV(data);
-      downloadCSV(csv, `absensi-${elements.kelas.value}-${elements.tanggal.value}.csv`);
-      showToast('Data berhasil diekspor', 'success');
-    }
-
-    function convertToCSV(data) {
-      const headers = Object.keys(data[0]).join(',');
-      const rows = data.map(row => Object.values(row).join(',')).join('\n');
-      return headers + '\n' + rows;
-    }
-
-    function downloadCSV(csv, filename) {
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }
 
     function showToast(message, type = 'info') {
       const toast = document.createElement('div');
@@ -620,5 +509,5 @@
       }, 3000);
     }
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967a03a360d28814',t:'MTc1MzkzMjU5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967a0f4834988814',t:'MTc1MzkzMzA3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
